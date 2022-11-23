@@ -4,7 +4,6 @@ import (
 	"backend/cmd/api/domain/model"
 	"backend/cmd/api/domain/repository"
 	"github.com/jmoiron/sqlx"
-	"log"
 	"time"
 )
 
@@ -34,7 +33,6 @@ func (ip *itemPersistence) Create(item *model.Item) (err error) {
 	_, err = db.Exec(
 		"INSERT INTO items (name, status, created_at, updated_at) values (?, ?, ?, ?)",
 		item.Name, item.Status, now, now)
-	log.Print(item.Status)
 	if err != nil {
 		return err
 	}
