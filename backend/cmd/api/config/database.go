@@ -1,6 +1,7 @@
 package config
 
 import (
+	"backend/cmd/api/domain/model"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"log"
@@ -34,6 +35,8 @@ func Connect() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
+
+	autoMigration()
 
 	return db
 }
@@ -89,4 +92,8 @@ func Close() {
 	if err := db.Close(); err != nil {
 		panic(err)
 	}
+}
+
+func autoMigration() {
+	db.AutoMigrate(&model.Item{})
 }

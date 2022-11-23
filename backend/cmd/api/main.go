@@ -11,12 +11,14 @@ import (
 )
 
 func main() {
-	userPersistence := persistence.NewUserPersistence(config.Connect())
-	userUseCase := usecase.NewUserUseCase(userPersistence)
-	userHandler := handler.NewUserHandler(userUseCase)
+	itemPersistence := persistence.NewItemPersistence(config.Connect())
+	itemUseCase := usecase.NewItemUseCase(itemPersistence)
+	itemHandler := handler.NewItemHandler(itemUseCase)
 
 	router := httprouter.New()
-	router.GET("/api/users", userHandler.Index)
+	router.GET("/api/items", itemHandler.Index)
+	router.POST("/api/items", itemHandler.Create)
+	router.PUT("/api/items", itemHandler.Update)
 
 	http.ListenAndServe(":8000", &Server{router})
 	log.Fatal(http.ListenAndServe(":8000", router))
@@ -27,8 +29,8 @@ type Server struct {
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Access-Control-Allow-Origin", "https://example.com")
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET POST PUT")
 	w.Header().Add("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Add("Access-Control-Allow-Headers", "Origin")
 	w.Header().Add("Access-Control-Allow-Headers", "X-Requested-With")
